@@ -85,7 +85,7 @@ async function handleCreateRace() {
 	// The race has been created, now start the countdown
 	// call the async function runCountdown
 	await runCountdown()
-	// TODO - call the async function startRace
+	// call the async function startRace
 	startRace(store.race_id)
 	// TODO - call the async function runRace
 }
@@ -147,7 +147,7 @@ function handleSelectPodRacer(target) {
 	// add class selected to current target
 	target.classList.add('selected')
 
-	// TODO - save the selected racer to the store
+	// save the selected racer to the store
 	store.player_id = target.id
 }
 
@@ -163,7 +163,7 @@ function handleSelectTrack(target) {
 	// add class selected to current target
 	target.classList.add('selected')
 
-	// TODO - save the selected track id to the store
+	// save the selected track id to the store
 	store.track_id = target.id
 }
 
