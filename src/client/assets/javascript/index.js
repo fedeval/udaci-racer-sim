@@ -86,29 +86,34 @@ async function handleCreateRace() {
 	// call the async function runCountdown
 	await runCountdown()
 	// call the async function startRace
-	startRace(store.race_id)
-	// TODO - call the async function runRace
+	await startRace(store.race_id)
+	// call the async function runRace
+	await runRace(store.race_id)
 }
 
 function runRace(raceID) {
-	return new Promise(resolve => {
-	// TODO - use Javascript's built in setInterval method to get race info every 500ms
-
-	/* 
-		TODO - if the race info status property is "in-progress", update the leaderboard by calling:
-
-		renderAt('#leaderBoard', raceProgress(res.positions))
-	*/
-
-	/* 
-		TODO - if the race info status property is "finished", run the following:
-
-		clearInterval(raceInterval) // to stop the interval from repeating
-		renderAt('#race', resultsView(res.positions)) // to render the results view
-		reslove(res) // resolve the promise
-	*/
-	})
-	// remember to add error handling for the Promise
+	try {
+		return new Promise(resolve => {
+			// TODO - use Javascript's built in setInterval method to get race info every 500ms
+			let raceInterval = setInterval(() => {
+				getRace(raceID)
+				.then(res => {
+					console.log(res)
+					if (res.status === 'in-progress') {
+						// TODO - if the race info status property is "in-progress", update the leaderboard by calling:
+						renderAt('#leaderBoard', raceProgress(res.positions))
+					} else if (res.status === 'finished') { 
+						// TODO - if the race info status property is "finished", run the following:
+						clearInterval(raceInterval) // to stop the interval from repeating
+						renderAt('#race', resultsView(res.positions)) // to render the results view
+						resolve(res) // resolve the promise
+					}
+				})
+			},500)
+		})
+	} catch (error) {
+		console.log(error)
+	}
 }
 
 async function runCountdown() {
@@ -272,7 +277,9 @@ function resultsView(positions) {
 }
 
 function raceProgress(positions) {
-	let userPlayer = positions.find(e => e.id === store.player_id)
+	console.log(positions)
+	let userPlayer = positions.find(e => e.id === parseInt(store.player_id, 10))
+	console.log(userPlayer)
 	userPlayer.driver_name += " (you)"
 
 	positions = positions.sort((a, b) => (a.segment > b.segment) ? -1 : 1)
