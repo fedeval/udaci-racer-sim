@@ -1,7 +1,7 @@
 // PROVIDED CODE BELOW (LINES 1 - 80) DO NOT REMOVE
 // Test git remote
 // The store will hold all information needed globally
-var store = {
+const store = {
 	track_id: undefined,
 	player_id: undefined,
 	race_id: undefined,
@@ -77,7 +77,7 @@ async function handleCreateRace() {
 	// render starting UI
 	renderAt('#race', renderRaceStartView(store.track_id, store.player_id))
 	// Get player_id and track_id from the store
-	let { player_id, track_id } = store
+	const { player_id, track_id } = store
 	// Invoke the API call to create the race, then save the result
 	const race = await createRace(player_id, track_id)
 	// Update the store with the race id
@@ -278,7 +278,7 @@ function resultsView(positions) {
 }
 
 function raceProgress(positions) {
-	let userPlayer = positions.find(e => e.id === parseInt(store.player_id, 10))
+	const userPlayer = positions.find(e => e.id === parseInt(store.player_id, 10))
 	userPlayer.driver_name += " (you)"
 
 	positions = positions.sort((a, b) => (a.segment > b.segment) ? -1 : 1)
