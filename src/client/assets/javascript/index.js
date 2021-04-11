@@ -81,13 +81,12 @@ async function handleCreateRace() {
 	// Invoke the API call to create the race, then save the result
 	const race = await createRace(player_id, track_id)
 	// Update the store with the race id
-	store.race_id = race.ID
-
+	store.race_id = race.ID - 1
 	// The race has been created, now start the countdown
-	// TODO - call the async function runCountdown
-
-	// TODO - call the async function startRace
-
+	// call the async function runCountdown
+	await runCountdown()
+	// call the async function startRace
+	startRace(store.race_id)
 	// TODO - call the async function runRace
 }
 
@@ -119,13 +118,17 @@ async function runCountdown() {
 		let timer = 3
 
 		return new Promise(resolve => {
-			// TODO - use Javascript's built in setInterval method to count down once per second
-
-			// run this DOM manipulation to decrement the countdown for the user
-			document.getElementById('big-numbers').innerHTML = --timer
-
-			// TODO - if the countdown is done, clear the interval, resolve the promise, and return
-
+			// Use Javascript's built in setInterval method to count down once per second
+			let countDownInterval = setInterval(() => {
+				timer - 1
+				// run this DOM manipulation to decrement the countdown for the user
+				document.getElementById('big-numbers').innerHTML = --timer
+				// if the countdown is done, clear the interval, resolve the promise, and return
+				if (timer === 0) {
+					clearInterval(countDownInterval)
+					resolve()
+				}
+			}, 1000)
 		})
 	} catch(error) {
 		console.log(error);
@@ -144,7 +147,7 @@ function handleSelectPodRacer(target) {
 	// add class selected to current target
 	target.classList.add('selected')
 
-	// TODO - save the selected racer to the store
+	// save the selected racer to the store
 	store.player_id = target.id
 }
 
@@ -160,7 +163,7 @@ function handleSelectTrack(target) {
 	// add class selected to current target
 	target.classList.add('selected')
 
-	// TODO - save the selected track id to the store
+	// save the selected track id to the store
 	store.track_id = target.id
 }
 
@@ -351,6 +354,9 @@ function createRace(player_id, track_id) {
 
 function getRace(id) {
 	// GET request to `${SERVER}/api/races/${id}`
+	return fetch(`${SERVER}/api/races/${id}`)
+	.then(response => response.json())
+	.catch(err => console.log(err))	
 }
 
 function startRace(id) {
@@ -358,7 +364,6 @@ function startRace(id) {
 		method: 'POST',
 		...defaultFetchOpts(),
 	})
-	.then(res => res.json())
 	.catch(err => console.log("Problem with getRace request::", err))
 }
 
