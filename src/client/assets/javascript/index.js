@@ -94,16 +94,16 @@ async function handleCreateRace() {
 function runRace(raceID) {
 	try {
 		return new Promise(resolve => {
-			// TODO - use Javascript's built in setInterval method to get race info every 500ms
+			// Use Javascript's built in setInterval method to get race info every 500ms
 			let raceInterval = setInterval(() => {
 				getRace(raceID)
 				.then(res => {
 					console.log(res)
 					if (res.status === 'in-progress') {
-						// TODO - if the race info status property is "in-progress", update the leaderboard by calling:
+						// if the race info status property is "in-progress", update the leaderboard by calling:
 						renderAt('#leaderBoard', raceProgress(res.positions))
 					} else if (res.status === 'finished') { 
-						// TODO - if the race info status property is "finished", run the following:
+						// if the race info status property is "finished", run the following:
 						clearInterval(raceInterval) // to stop the interval from repeating
 						renderAt('#race', resultsView(res.positions)) // to render the results view
 						resolve(res) // resolve the promise
@@ -174,7 +174,7 @@ function handleSelectTrack(target) {
 
 function handleAccelerate() {
 	console.log("accelerate button clicked")
-	// TODO - Invoke the API call to accelerate
+	// Invoke the API call to accelerate
 	accelerate(store.race_id)
 }
 
